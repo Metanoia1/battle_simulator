@@ -13,6 +13,22 @@ class Army:
         self._health_line_len = 50
 
     @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise TypeError("Name must be the (str) instance")
+
+        value = value.strip()
+        value_len = len(value)
+        if value_len < 3 or value_len > 15:
+            raise ValueError("Name value must be between 3-15 symbols")
+
+        self._name = value
+
+    @property
     def squads(self):
         return self._squads
 

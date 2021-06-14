@@ -3,6 +3,7 @@ Unit, Soldier, and Vehicle classes implementation module
 """
 from random import randint, choice
 from time import perf_counter
+from statistics import geometric_mean
 
 
 class Unit:
@@ -31,6 +32,9 @@ class Unit:
         int_instance = isinstance(value, int)
         if not any([float_instance, int_instance]):
             raise TypeError("Health value must be the int/float instance")
+
+        if value > 10000:
+            raise ValueError("Health value cannot be more than 10000")
 
         if value > self._init_health:
             self._health = self._init_health
@@ -130,9 +134,9 @@ class Vehicle(Unit):
     def success(self):
         value_1 = 0.5
         value_2 = 1 + self.health / 100
-        operators_scc = sum(o.success() for o in self.operators if o.is_active)
-        operators_len = len(self.operators)
-        return value_1 * value_2 * (operators_scc / operators_len)
+        value_3 = [o.success() for o in self.operators if o.is_active]
+        gavg = geometric_mean(value_3)
+        return value_1 * value_2 * gavg
 
     def attack(self):
         self.now = perf_counter()

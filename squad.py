@@ -55,7 +55,7 @@ class Squad:
 
     def success(self):
         units_scc = sum(u.success() for u in self.units if u.is_active)
-        units_len = len(self.units)
+        units_len = max(len(self.units), 1)
         return units_scc / units_len
 
     def attack(self):
