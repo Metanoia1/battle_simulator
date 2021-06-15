@@ -91,6 +91,7 @@ class Soldier(Unit):
         else:
             self._experience = value
 
+    @property
     def success(self):
         value_1 = 0.5
         value_2 = 1 + self.health / 100
@@ -131,10 +132,11 @@ class Vehicle(Unit):
 
         self._operators = value
 
+    @property
     def success(self):
         value_1 = 0.5
         value_2 = 1 + self.health / 100
-        value_3 = [o.success() for o in self.operators if o.is_active]
+        value_3 = [o.success for o in self.operators if o.is_active]
         gavg = geometric_mean(value_3)
         return value_1 * value_2 * gavg
 

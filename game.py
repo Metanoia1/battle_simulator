@@ -64,7 +64,7 @@ class Game:
         attacking = participants["attacking"]
         defending = participants["defending"]
         if attacking and defending:
-            if attacking.success() > defending.success():
+            if attacking.success > defending.success:
                 defending.get_damage(attacking.attack())
 
     def run_game(self):
