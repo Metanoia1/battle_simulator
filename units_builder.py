@@ -1,7 +1,7 @@
 """
 UnitsBuilder class implementation module
 """
-from random import randint, choice
+from random import Random
 
 from units import Soldier, Vehicle
 from squad import Squad
@@ -9,32 +9,28 @@ from army import Army
 
 
 class UnitsBuilder:
-    def __init__(self, army_name, units_num, squads_num):
+
+    _random = Random(12345)
+
+    def __init__(self, army_name, strategy, squads_num, units_num):
         self._army_name = army_name
-        self._units_num = units_num
+        self._strategy = strategy
         self._squads_num = squads_num
-        self._strategy = ("weakest", "strongest", "random")
+        self._units_num = units_num
 
-    def create_soldier(self, health=100, recharge=100, experience=0):
-        recharge = randint(recharge, 2000)
-        return Soldier(health, recharge, experience)
+    def create_soldier(self):
+        return Soldier(self._army_name)
 
-    def create_vehicle(self, health=100, recharge=1001):
-        soldiers = {self.create_soldier() for _ in range(randint(1, 3))}
-        recharge = randint(recharge, 2000)
-        return Vehicle(soldiers, health, recharge)
+    def create_vehicle(self):
+        soldiers = [self.create_soldier() for _ in range(3)]
+        return Vehicle(self._army_name, soldiers)
 
-    def create_squad(self, strategy=None):
-        if not strategy:
-            strategy = choice(self._strategy)
+    def create_squad(self):
         units = [self.create_soldier, self.create_vehicle]
-        units = {choice(units)() for _ in range(self._units_num)}
-        return Squad(strategy, units)
-
-    def create_army(self, strategy):
-        squads = {self.create_squad(strategy) for _ in range(self._squads_num)}
-        return Army(self._army_name, squads)
+        units = [self._random.choice(units)() for _ in range(self._units_num)]
+        return Squad(self._army_name, self._strategy, units)
 
     def __call__(self):
-        squads = {self.create_squad() for _ in range(self._squads_num)}
-        return Army(self._army_name, squads)
+        squads = [self.create_squad() for _ in range(self._squads_num)]
+        strategy = self._strategy
+        return Army(self._army_name, strategy, squads)

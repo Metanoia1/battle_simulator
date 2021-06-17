@@ -1,7 +1,7 @@
 """
 Game class implementation module
 """
-from random import choice
+from random import Random
 from time import perf_counter
 from subprocess import run
 
@@ -9,6 +9,9 @@ from army import Army
 
 
 class Game:
+
+    _random = Random(12345)
+
     def __init__(self, armies):
         self.armies = armies
 
@@ -18,61 +21,53 @@ class Game:
 
     @armies.setter
     def armies(self, value):
-        if not isinstance(value, set):
-            raise TypeError("The `armies` must be a set value")
+        if not isinstance(value, list):
+            raise TypeError("The `armies` must be a list value")
 
-        if len(value) < 2:
+        value_len = len(value)
+        if value_len < 2:
             raise ValueError("Amount value of armies cannot be less then 2")
 
+        same_instances = value_len != len(set(value))
+
         for army in value:
-            if not isinstance(army, Army):
+            if not isinstance(army, Army) or same_instances:
                 raise TypeError("Not all armies are correct instance")
 
         self._armies = value
 
     def select_attacking_and_defending_squads(self):
         result = {"attacking": None, "defending": None}
-
         alive_armies = [a for a in self.armies if a.is_active]
-        attacking_army = choice(alive_armies)
+        attacking_army = self._random.choice(alive_armies)
         rest_armies = [a for a in alive_armies if a is not attacking_army]
-        defending_army = choice(rest_armies)
-        attacking_squads = [s for s in attacking_army.squads if s.is_active]
-        defending_squads = [s for s in defending_army.squads if s.is_active]
+        defending_army = self._random.choice(rest_armies)
+        attacking_squads = [s for s in attacking_army.units if s.is_active]
+        defending_squads = [s for s in defending_army.units if s.is_active]
 
         if attacking_squads and defending_squads:
-            attacking_squad = choice(attacking_squads)
-            d_squads = defending_squads
-            func = lambda squad: squad.health
-
-            if attacking_squad.strategy == "weakest":
-                defending_squad = sorted(d_squads, key=func)[0]
-
-            if attacking_squad.strategy == "strongest":
-                defending_squad = sorted(d_squads, key=func, reverse=True)[0]
-
-            if attacking_squad.strategy == "random":
-                defending_squad = choice(d_squads)
-
-            result["attacking"] = attacking_squad
-            result["defending"] = defending_squad
+            attacking = attacking_squads[0]
+            defending = attacking.get_defending(defending_squads)
+            result["attacking"] = attacking
+            result["defending"] = defending
 
         return result
 
-    def fight(self):
+    def fight(self, now):
         participants = self.select_attacking_and_defending_squads()
         attacking = participants["attacking"]
         defending = participants["defending"]
         if attacking and defending:
             if attacking.success > defending.success:
-                defending.get_damage(attacking.attack())
+                defending.get_damage(attacking.attack(now))
 
     def run_game(self):
         start = perf_counter()
+        timer = 0
         while True:
+            timer += 50
             run("clear", check=True)
-
-            self.fight()
+            self.fight(timer)
 
             for army in self.armies:
                 print(f"{army} health = {int(army.health)}:")
