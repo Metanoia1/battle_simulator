@@ -13,37 +13,32 @@ from squad import Squad
 
 SEED = 12345
 
-# Test Squad
-###############################################################################
+
 @pytest.fixture
 def squad_values():
     return {
         "units": [
-            Soldier("soldier_1", Random(SEED)),
-            Soldier("soldier_2", Random(SEED)),
-            Soldier("soldier_3", Random(SEED)),
+            Soldier(Random(SEED)),
+            Soldier(Random(SEED)),
+            Soldier(Random(SEED)),
             Vehicle(
                 [
-                    Soldier("soldier_4", Random(SEED)),
-                    Soldier("soldier_5", Random(SEED)),
-                    Soldier("soldier_6", Random(SEED)),
+                    Soldier(Random(SEED)),
+                    Soldier(Random(SEED)),
+                    Soldier(Random(SEED)),
                 ],
-                "vehicle_1",
                 Random(SEED),
             ),
             Vehicle(
                 [
-                    Soldier("soldier_7", Random(SEED)),
-                    Soldier("soldier_8", Random(SEED)),
-                    Soldier("soldier_9", Random(SEED)),
+                    Soldier(Random(SEED)),
+                    Soldier(Random(SEED)),
+                    Soldier(Random(SEED)),
                 ],
-                "vehicle_2",
                 Random(SEED),
             ),
         ],
-        "name": "vehicle",
         "strategy": "strongest",
-        "random_": Random(SEED),
         "strategies": all_strategies,
     }
 
@@ -61,9 +56,9 @@ def test_squad_instance_creation(squad, squad_values):
 def test_squad_is_active_property(squad):
     assert getattr(squad, "is_active") == True
     for u in squad.units:
-        u.health = 0
+        u._health = 0
     assert getattr(squad, "is_active") == False
-    squad.units[0].health = 0.5
+    squad.units[0]._health = 0.5
     assert getattr(squad, "is_active") == True
 
 

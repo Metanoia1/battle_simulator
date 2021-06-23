@@ -8,31 +8,31 @@ class UnitsBuilder:
 
     """Instance of the UnitsBuilder class creates units for the game"""
 
-    def __init__(self, strategy, squads_num, units_num, random_, strategies):
+    def __init__(self, strategies, strategy, squads_num, units_num, random_):
+        self._strategies = strategies
         self._strategy = strategy
         self._squads_num = squads_num
         self._units_num = units_num
-        self._random = random_
-        self._strategies = strategies
+        self.random_ = random_
 
-    def create_soldier(self, name):
+    def create_soldier(self):
         """This method creates Soldier instance
 
         Returns:
             Soldier instance
         """
-        return Soldier(name, self._random)
+        return Soldier(self.random_)
 
-    def create_vehicle(self, name):
+    def create_vehicle(self):
         """This method creates Vehicle instance
 
         Returns:
             Vehicle instance
         """
-        soldiers = [self.create_soldier(name) for _ in range(3)]
-        return Vehicle(soldiers, name, self._random)
+        soldiers = [self.create_soldier() for _ in range(3)]
+        return Vehicle(soldiers, self.random_)
 
-    def create_squad(self, name):
+    def create_squad(self):
         """This method creates Squad instance
 
         Returns:
@@ -44,14 +44,10 @@ class UnitsBuilder:
         if self._units_num % 2 != 0:
             soldiers_num += 1
 
-        soldiers = [self.create_soldier(name) for _ in range(soldiers_num)]
-        vehicles = [self.create_vehicle(name) for _ in range(vehicles_num)]
-
+        soldiers = [self.create_soldier() for _ in range(soldiers_num)]
+        vehicles = [self.create_vehicle() for _ in range(vehicles_num)]
         units = soldiers + vehicles
-
-        return Squad(
-            units, name, self._strategy, self._random, self._strategies
-        )
+        return Squad(units, self._strategy, self._strategies)
 
     def create_army(self, name):
         """This method creates Army instance
@@ -59,7 +55,5 @@ class UnitsBuilder:
         Returns:
             Army instance
         """
-        squads = [self.create_squad(name) for _ in range(self._squads_num)]
-        return Army(
-            squads, name, self._strategy, self._random, self._strategies
-        )
+        squads = [self.create_squad() for _ in range(self._squads_num)]
+        return Army(name, squads, self._strategy, self._strategies)

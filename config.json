@@ -1,9 +1,13 @@
 {
   "number_of_armies": 5,
-  "armies_strategy": "weakest",
   "squads_per_army": 2,
   "units_per_squad": 5,
   "seed": 12345,
-  "specific_army_number": 3,
-  "specific_army_strategy": "strongest"
+  "strategies": [
+    "weakest",
+    "strongest",
+    "random",
+    "weakest",
+    "strongest"
+  ]
 }

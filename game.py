@@ -1,16 +1,12 @@
-"""
-Game class implementation module
-"""
-from time import perf_counter
+"""Game class implementation module"""
 from subprocess import run
 
-from services import mylogger
+from utils import mylogger
 
 
 class Game:
-    def __init__(self, armies, seed):
+    def __init__(self, armies):
         self.armies = armies
-        self._random = seed
 
     def _get_defending_army(self, attacking_army):
         defending_armies = [
@@ -35,8 +31,10 @@ class Game:
         for army in self.armies:
             if army.is_active:
                 defending_army = self._get_defending_army(army)
+
                 if not defending_army:
                     return army
+
                 mylogger(army, defending_army)
                 for squad in army.units:
                     if squad.is_active:
@@ -47,7 +45,6 @@ class Game:
         return None
 
     def run_game(self):
-        start = perf_counter()
         timer = 0
         while True:
             timer += 100
@@ -60,11 +57,7 @@ class Game:
             winner = self.move(timer)
 
             if winner:
-                print("_" * 60)
-                print(f"{winner} won!")
                 print("_" * 20)
-                print(f"{int(perf_counter() - start)} seconds")
+                print(f"{winner.name} won!")
                 print("_" * 20)
-                print("TIMER: ", timer)
-                print("_" * 60)
                 return

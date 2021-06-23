@@ -6,17 +6,15 @@ from random import Random
 
 import pytest
 
-from units import Unit, Soldier, Vehicle
+from units import Soldier, Vehicle
 
 
 SEED = 12345
 
-# Test Soldier
-###############################################################################
+
 @pytest.fixture
 def soldier_values():
     return {
-        "name": "soldier",
         "random_": Random(SEED),
         "health": 100,
         "recharge": 100,
@@ -36,7 +34,7 @@ def test_soldier_instance_creation(soldier, soldier_values):
 
 def test_soldier_is_active_property(soldier):
     assert getattr(soldier, "is_active") == True
-    soldier.health = 0
+    soldier._health = 0
     assert getattr(soldier, "is_active") == False
 
 
@@ -64,22 +62,20 @@ def test_soldier_get_damage_method(soldier):
     soldier.get_damage(0.55)
     assert getattr(soldier, "health") == 99.45
     assert getattr(soldier, "is_active") == True
+    soldier._health = 100
     soldier.get_damage(100)
     assert getattr(soldier, "health") == 0
     assert getattr(soldier, "is_active") == False
 
 
-# Test Vehicle
-###############################################################################
 @pytest.fixture
 def vehicle_values(soldier):
     return {
         "operators": [
-            Soldier("soldier_1", Random(SEED)),
-            Soldier("soldier_2", Random(SEED)),
-            Soldier("soldier_3", Random(SEED)),
+            Soldier(Random(SEED)),
+            Soldier(Random(SEED)),
+            Soldier(Random(SEED)),
         ],
-        "name": "vehicle",
         "random_": Random(SEED),
         "health": 100,
         "recharge": 1001,
@@ -102,13 +98,13 @@ def test_vehicle_instance_creation(vehicle, vehicle_values):
 
 def test_vehicle_is_active_property(vehicle, vehicle_values):
     assert getattr(vehicle, "is_active") == True
-    vehicle.health = 0
+    vehicle._health = 0
     assert getattr(vehicle, "is_active") == False
-    vehicle.health = 1
+    vehicle._health = 1
     assert getattr(vehicle, "is_active") == True
     for operator in vehicle.operators:
-        operator.health = 0
-    vehicle.health = 1000
+        operator._health = 0
+    vehicle._health = 100
     assert getattr(vehicle, "health") == vehicle_values.get("health")
     assert getattr(vehicle, "is_active") == False
 
@@ -137,18 +133,18 @@ def test_vehicle_attack_method(vehicle, vehicle_values):
 
 def test_vehicle_get_damage_method(vehicle):
     vehicle.get_damage(100)
-    assert vehicle.health == 40
-    assert vehicle.operators[0].health == 90
-    assert vehicle.operators[1].health == 80
-    assert vehicle.operators[2].health == 90
-    vehicle.health = 1000
+    assert vehicle._health == 40
+    assert vehicle.operators[0]._health == 90
+    assert vehicle.operators[1]._health == 80
+    assert vehicle.operators[2]._health == 90
+    vehicle._health = 100
     vehicle.get_damage(10)
     assert getattr(vehicle, "health") == 94
     assert getattr(vehicle, "is_active") == True
     vehicle.get_damage(157)
     assert getattr(vehicle, "is_active") == False
-    vehicle.health = 100
+    vehicle._health = 100
     assert getattr(vehicle, "is_active") == True
     for o in vehicle.operators:
-        o.health = 0
+        o._health = 0
     assert getattr(vehicle, "is_active") == False
