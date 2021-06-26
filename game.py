@@ -30,7 +30,7 @@ class Game:
             if attacking_squad.success > defending_squad.success:
                 defending_squad.get_damage(attacking_squad.attack(now))
 
-    def _fight_squads(self, attacking_squads, defending_army, now):
+    def _squads_fight(self, attacking_squads, defending_army, now):
         for squad in attacking_squads:
             if squad.is_active:
                 self._attack(
@@ -53,7 +53,7 @@ class Game:
                     return army
 
                 mylogger(army, defending_army)
-                self._fight_squads(army.units, defending_army, now)
+                self._squads_fight(army.units, defending_army, now)
 
         return None
 
