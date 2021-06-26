@@ -1,19 +1,22 @@
 """Game class implementation module"""
 from subprocess import run
+from typing import List
 
 from utils import mylogger
+from army import Army
 
 
 class Game:
-    def __init__(self, armies):
+
+    """This class implements the lifecycle of the game"""
+
+    def __init__(self, armies: List[Army]) -> None:
         self.armies = armies
 
-    def _get_defending_army(self, attacking_army):
-        defending_armies = [
-            a for a in self.armies if a is not attacking_army and a.is_active
-        ]
-        if defending_armies:
-            return attacking_army.get_defending(defending_armies)
+    def _get_defending_army(self, army):
+        armies = [a for a in self.armies if a is not army and a.is_active]
+        if armies:
+            return army.get_defending(armies)
         return None
 
     def _get_defending_squad(self, defending_army, attacking_squad):
@@ -22,12 +25,26 @@ class Game:
             return attacking_squad.get_defending(defending_squads)
         return None
 
-    def fight(self, attacking_squad, defending_squad, now):
+    def _attack(self, attacking_squad, defending_squad, now):
         if attacking_squad and defending_squad:
             if attacking_squad.success > defending_squad.success:
                 defending_squad.get_damage(attacking_squad.attack(now))
 
-    def move(self, now):
+    def _fight_squads(self, attacking_squads, defending_army, now):
+        for squad in attacking_squads:
+            if squad.is_active:
+                self._attack(
+                    squad,
+                    self._get_defending_squad(defending_army, squad),
+                    now,
+                )
+
+    def fight(self, now: int):
+        """Implements one round of the fight
+
+        Returns (Army) if that is an only alive army in self.armies else:
+        returns (None)
+        """
         for army in self.armies:
             if army.is_active:
                 defending_army = self._get_defending_army(army)
@@ -36,15 +53,12 @@ class Game:
                     return army
 
                 mylogger(army, defending_army)
-                for squad in army.units:
-                    if squad.is_active:
-                        defending_squad = self._get_defending_squad(
-                            defending_army, squad
-                        )
-                        self.fight(squad, defending_squad, now)
+                self._fight_squads(army.units, defending_army, now)
+
         return None
 
-    def run_game(self):
+    def run_game(self) -> None:
+        """launches the lifecycle of the game"""
         timer = 0
         while True:
             timer += 100
@@ -54,7 +68,7 @@ class Game:
                 print(army)
                 print(army.health_line)
 
-            winner = self.move(timer)
+            winner = self.fight(timer)
 
             if winner:
                 print("_" * 20)
