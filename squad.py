@@ -17,8 +17,8 @@ class Squad:
         return sum(u.health for u in self.units if u.is_active)
 
     @property
-    def is_active(self):
-        """Returns True if any unit in self.units is alive, else returns False"""
+    def is_active(self) -> bool:
+        """Returns True if any unit in self.units is alive, else -> False"""
         return any(u.is_active for u in self.units)
 
     @property

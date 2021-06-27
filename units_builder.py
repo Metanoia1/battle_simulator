@@ -1,7 +1,7 @@
 """UnitsBuilder class implementation module"""
-from units import Soldier, Vehicle
-from squad import Squad
 from army import Army
+from squad import Squad
+from units import Soldier, Vehicle
 
 
 class UnitsBuilder:

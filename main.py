@@ -1,10 +1,10 @@
 """Module to start the game"""
 from random import Random
 
-from utils import get_data_from_json_file, clear_log
+from game import Game
 from strategies import all_strategies
 from units_builder import UnitsBuilder
-from game import Game
+from utils import clear_log, get_data_from_json_file
 
 
 def main():

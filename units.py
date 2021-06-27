@@ -6,7 +6,7 @@ from statistics import geometric_mean
 
 class Unit(metaclass=ABCMeta):
 
-    """This class provide some abstract methods and some logic for subclasses"""
+    """This class provides some abstract methods and logic for subclasses"""
 
     def __init__(self, recharge: int, random_: Random, health=100) -> None:
         """Constructor method

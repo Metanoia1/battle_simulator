@@ -2,8 +2,8 @@
 from random import Random
 from typing import Dict, List, Protocol
 
-from utils import get_data_from_json_file
 from units import Unit
+from utils import get_data_from_json_file
 
 
 class Strategy(Protocol):
