@@ -62,11 +62,6 @@ def test_squad_is_active_property(squad):
     assert getattr(squad, "is_active") == True
 
 
-def test_squad_is_ready_method(squad):
-    assert squad.is_ready(0) == False
-    assert squad.is_ready(1001) == True
-
-
 def test_squad_success_property(squad):
     for u in squad.units:
         if isinstance(u, Soldier):

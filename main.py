@@ -8,6 +8,7 @@ from game import Game
 
 
 def main():
+    """This function creates and starts the game"""
     clear_log()
 
     data = get_data_from_json_file("config.json")
