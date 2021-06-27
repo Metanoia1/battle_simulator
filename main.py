@@ -19,8 +19,8 @@ def main():
 
     armies = [
         UnitsBuilder(
-            all_strategies,
             strategies[army],
+            all_strategies,
             squads_per_army,
             units_per_squad,
             seed,
