@@ -1,10 +1,21 @@
 """Unit, Soldier, and Vehicle classes implementation module"""
+from random import Random
 from abc import ABCMeta, abstractmethod
 from statistics import geometric_mean
 
 
 class Unit(metaclass=ABCMeta):
-    def __init__(self, recharge, random_, health=100):
+
+    """This class provide some abstract methods and some logic for subclasses"""
+
+    def __init__(self, recharge: int, random_: Random, health=100) -> None:
+        """Constructor method
+
+        Args:
+            recharge: the time necessary for unit recharging
+            random_: Random instance with a seed value (example: Random(123))
+            health: unit health
+        """
         self.recharge = recharge
         self.random_ = random_
         self._health = health
@@ -12,10 +23,12 @@ class Unit(metaclass=ABCMeta):
 
     @property
     def health(self):
+        """Unit health value"""
         return self._health
 
     @property
     def last_attack(self):
+        """Time of the unit last attack"""
         return self._last_attack
 
     @last_attack.setter
@@ -25,6 +38,7 @@ class Unit(metaclass=ABCMeta):
         self._last_attack = value
 
     def is_ready(self, now):
+        """Returns True if unit ready to next attack else returns False"""
         return now - self.last_attack >= self.recharge
 
     @property
@@ -47,12 +61,19 @@ class Unit(metaclass=ABCMeta):
 
 
 class Soldier(Unit):
+
+    """Soldier instance implementation"""
+
     def __init__(self, random_, health=100, recharge=100, experience=0):
         super().__init__(recharge, random_, health)
         self.experience = experience
 
     @property
     def experience(self):
+        """Soldier experience value
+
+        increments after each successful attack
+        """
         return self._experience
 
     @experience.setter
@@ -92,6 +113,9 @@ class Soldier(Unit):
 
 
 class Vehicle(Unit):
+
+    """Vehicle instance implementation"""
+
     def __init__(self, operators, random_, health=100, recharge=1001):
         super().__init__(recharge, random_, health)
         self.operators = operators
