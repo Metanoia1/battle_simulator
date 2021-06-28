@@ -26,7 +26,7 @@ class Squad:
         """Returns attack success probability value"""
         return geometric_mean(u.success for u in self.units)
 
-    def attack(self, now: int) -> float:
+    def attack(self, now):
         """Returns attack value"""
         return sum(u.attack(now) for u in self.units if u.is_ready(now))
 
@@ -40,3 +40,7 @@ class Squad:
     def get_defending(self, units):
         """Returns defending unit according to self.strategy"""
         return self.strategies[self.strategy](units)
+
+    def is_ready(self, now) -> bool:
+        """Returns True if any unit in self.units is ready, else -> False"""
+        return any(u.is_ready(now) for u in self.units if u.is_active)

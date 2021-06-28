@@ -1,4 +1,7 @@
 """Strategies (dict) implementation module"""
+# pylint: disable=(missing-class-docstring)
+# pylint: disable=(too-few-public-methods)
+# pylint: disable=(missing-function-docstring)
 from random import Random
 from typing import Dict, List, Protocol
 

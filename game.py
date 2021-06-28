@@ -1,4 +1,5 @@
 """Game class implementation module"""
+# pylint: disable=(no-self-use)
 from subprocess import run
 from typing import List
 

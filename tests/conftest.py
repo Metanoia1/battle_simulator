@@ -8,6 +8,7 @@ import pytest
 from strategies import all_strategies
 from units import Soldier, Vehicle
 from squad import Squad
+from units_builder import UnitsBuilder
 
 
 SEED = 12345
@@ -181,3 +182,22 @@ def squad2(squad2_values):
 @pytest.fixture
 def squad3(squad3_values):
     return Squad(**squad3_values)
+
+
+@pytest.fixture
+def army_values():
+    return {
+        "name": "SPARTA",
+        "strategy": "weakest",
+    }
+
+
+@pytest.fixture
+def army(army_values):
+    return UnitsBuilder(
+        army_values["strategy"],
+        all_strategies,
+        2,
+        5,
+        Random(SEED),
+    ).create_army(army_values["name"])

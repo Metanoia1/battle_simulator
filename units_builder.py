@@ -1,4 +1,5 @@
 """UnitsBuilder class implementation module"""
+# pylint: disable=(too-many-arguments)
 from army import Army
 from squad import Squad
 from units import Soldier, Vehicle

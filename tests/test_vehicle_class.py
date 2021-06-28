@@ -5,21 +5,17 @@ Command line: python -m pytest tests/test_vehicle_class.py
 # pylint: disable=(missing-function-docstring)
 
 
-def test_vehicle_operators_is_the_diff_instances(vehicle):
-    assert len(set(vehicle.operators)) == 3
-
-
 def test_vehicle_instance_creation(vehicle, vehicle_values):
     for attr_name in vehicle_values:
         assert getattr(vehicle, attr_name) is vehicle_values.get(attr_name)
 
 
 def test_vehicle_is_active_property(vehicle):
-    assert getattr(vehicle, "is_active") is True
+    assert vehicle.is_active is True
     vehicle.operators[0].get_damage(100)
     vehicle.operators[1].get_damage(100)
     vehicle.operators[2].get_damage(100)
-    assert getattr(vehicle, "is_active") is False
+    assert vehicle.is_active is False
 
 
 def test_vehicle_is_ready_method(vehicle, vehicle_values):
