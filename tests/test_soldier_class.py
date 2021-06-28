@@ -30,6 +30,27 @@ def test_soldier_invalid_last_attack(soldier, value, ex):
         ([1, 2, 3], TypeError),
         ("hello", TypeError),
         ({"a": 7}, TypeError),
+    ],
+)
+def test_soldier_invalid_health(soldier, value, ex):
+    with pytest.raises(ex):
+        soldier.health = value
+
+
+def test_soldier_health_setter(soldier):
+    assert soldier.health == 100
+    soldier.health = 1000
+    assert soldier.health == 100
+    soldier.health = -1000
+    assert soldier.health == 0
+
+
+@pytest.mark.parametrize(
+    "value, ex",
+    [
+        ([1, 2, 3], TypeError),
+        ("hello", TypeError),
+        ({"a": 7}, TypeError),
         (2.2, TypeError),
     ],
 )

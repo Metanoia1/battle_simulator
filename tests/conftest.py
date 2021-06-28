@@ -195,9 +195,5 @@ def army_values():
 @pytest.fixture
 def army(army_values):
     return UnitsBuilder(
-        army_values["strategy"],
-        all_strategies,
-        2,
-        5,
-        Random(SEED),
+        army_values["strategy"], all_strategies, 2, 5, Random(SEED)
     ).create_army(army_values["name"])

@@ -16,15 +16,29 @@ class Unit(metaclass=ABCMeta):
             random_: Random instance with a seed value (example: Random(123))
             health: unit health
         """
+        self._init_health = health
         self.recharge = recharge
         self.random_ = random_
-        self._health = health
+        self.health = health
         self.last_attack = 0
 
     @property
     def health(self):
         """Unit health value"""
         return self._health
+
+    @health.setter
+    def health(self, value):
+        if not isinstance(value, int) and not isinstance(value, float):
+            raise TypeError("health value must be the int/float instance")
+
+        self._health = value
+
+        if self.health > self._init_health:
+            self._health = self._init_health
+
+        if self.health < 0:
+            self._health = 0
 
     @property
     def last_attack(self):
@@ -139,7 +153,7 @@ class Vehicle(Unit):
     def get_damage(self, value):
         percent_60 = value / 100 * 60
         percent_20 = value / 100 * 20
-        self._health -= percent_60
+        self.health -= percent_60
         alive_operators = [o for o in self.operators if o.is_active]
         rest_operators = None
 
